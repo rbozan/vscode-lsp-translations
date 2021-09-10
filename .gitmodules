@@ -1,0 +1,3 @@
+[submodule "lsp-translations"]
+	path = lsp-translations
+	url = git@github.com:rbozan/lsp-translations.git
