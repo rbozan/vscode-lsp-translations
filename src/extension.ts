@@ -1,26 +1,71 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import path = require("path");
+import * as vscode from "vscode";
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  RevealOutputChannelOn,
+  ServerOptions,
+  TransportKind,
+} from "vscode-languageclient/node";
+
+let client: LanguageClient;
+
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "vscode-lsp-translations" is now active!');
+  // The debug options for the server
+  // --inspect=6009: runs the server in Node's Inspector mode so VS Code can attach to the server for debugging
+  // let debugOptions = { execArgv: ["--nolazy", "--inspect=6009"] };
+  let serverOptions: ServerOptions = {
+    // run: { module: serverModule, transport: TransportKind.ipc },
+    run: {
+      command: `--todo run --manifest-path ${context.asAbsolutePath(path.join('lsp-translations', 'Cargo.toml'))}`,
+    },
+    debug: {
+      // command: './lsp-translations',
+      command: `cargo`,
+      args: ['run'],
+      // args: ['watch', '-x', '"run"'],
+      // transport: { kind: TransportKind.socket, port: 9258 },
+      transport: TransportKind.stdio,
+      options: {
+        cwd: context.asAbsolutePath('lsp-translations'),
+        // cwd: context.asAbsolutePath(path.join('lsp-translations', 'target', 'debug')),
+        shell: true,
+        // detached: true
+      }
+    },
+  };
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('vscode-lsp-translations.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from vscode-lsp-translations!');
-	});
 
-	context.subscriptions.push(disposable);
+  // Options to control the language client
+  let clientOptions: LanguageClientOptions = {
+   revealOutputChannelOn: RevealOutputChannelOn.Info,
+    outputChannelName: "jaja!",
+    progressOnInitialization: true,
+    documentSelector: [{ scheme: "file", language: "javascript" }],
+    synchronize: {
+      // Notify the server about file changes to '.clientrc files contained in the workspace
+      // fileEvents: vscode.workspace.createFileSystemWatcher("**/*.js"),
+      // fileEvents: vscode.workspace.createF
+    },
+  };
+  vscode.window.showInformationMessage("test")
+
+  // Create the language client and start the client.
+  client = new LanguageClient(
+    "lsp-translations",
+    "Language Server Example",
+    serverOptions,
+    clientOptions
+  );
+
+  // Start the client. This will also launch the server
+  client.start();
 }
 
-// this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate(): Thenable<void> | undefined {
+  if (!client) {
+    return undefined;
+  }
+  return client.stop();
+}
