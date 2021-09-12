@@ -14,30 +14,45 @@
     "onLanguage:javascriptreact"
   ],
   "main": "./out/extension.js",
-
   "contributes": {
     "capabilities": {
-			"hoverProvider": "true"
-		},
+      "hoverProvider": "true"
+    },
     "configuration": {
-      "title": "lsp-translations config",
+      "title": "lsp-translations",
       "properties": {
-        "lsp-translations.useCodeSnippetsOnMethodSuggest": {
-          "type": "boolean",
-          "default": false,
-          "description": "Complete functions with their parameter signature."
+        "lsp-translations.translationFiles": {
+          "type": "array",
+          "default": ["./translations.json", "./translations/*.json"],
+          "description": "Glob patterns for the translation files which contain all the translations of your project.",
+          "examples": [["translations.json"]]
+        },
+        "lsp-translations.fileName.details": {
+          "type": "string",
+          "description": "An optional regex pattern for the file name which can provide extra details to the extension. Can be useful when your translation file name contains language like 'en'.",
+          "examples": ["^.+?\\.(?<language>.+?)\\."]
+        },
+        "lsp-translations.key.details": {
+          "type": "string",
+          "description": "An optional regex pattern for the key of a translation which can provide extra details to the extension. Can be useful when your translation keys contains a language like 'en'.",
+          "examples": ["^.+?\\.(?<language>.+?)\\."]
+        },
+        "lsp-translations.key.filter": {
+          "type": "string",
+          "markdownDescription": "An optional regex pattern to filter out unneeded parts of a translation key. For example: if you have a translation key like `123.abc.key` and you only provide `key` to your translation function, you can use this setting to filter out the unneeded parts. The first regex group would be the correct key name.",
+          "examples": ["^.+?\\..+?\\.(.+$)"]
         },
         "lsp-translations.trace.server": {
-					"scope": "window",
-					"type": "string",
-					"enum": [
-						"off",
-						"messages",
-						"verbose"
-					],
-					"default": "off",
-					"description": "Traces the communication between VS Code and the language server."
-				}
+          "scope": "window",
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces the communication between VS Code and the language server."
+        }
       }
     }
   },
