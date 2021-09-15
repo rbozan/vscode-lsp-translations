@@ -1,6 +1,6 @@
-# vscode-lsp-translations README
+# vscode-lsp-translations
 
-This is the README for your extension "vscode-lsp-translations". After writing up a brief description, we recommend including the following sections.
+An extension for VSCode which provides autocompletion for the translations within your project. Uses https://github.com/rbozan/lsp-translations under the hood.
 
 ## Features
 
@@ -13,19 +13,86 @@ For example if there is an image subfolder under your extension project workspac
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+* https://github.com/rbozan/lsp-translations, which will automatically be downloaded on first startup.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+<table>
+  <thead>
+    <tr>
+      <td><strong>Setting</strong></td>
+      <td><strong>Default</strong></td>
+      <td><strong>Description</strong></td>
+      <td><strong>Examples</strong></td>
+    </tr>
+  </thead>
+  <tbody>
+
+<tr>
+<td>
+        
+`lsp-translations.translationFiles`
+
+</td>
+<td>
+        
+```json
+[
+"./translations.json",
+"./translations/*.json"
+]
+```
+
+</td>
+<td>Glob patterns for the translation files which contain all the translations of your project.</td>
+<td></td>
+</tr>
+    
+  
+<tr>
+<td>
+        
+`lsp-translations.fileName.details`
+
+</td>
+<td>🚫</td>
+<td>An optional regex pattern for the file name which can provide extra details to the extension. Can be useful when your translation file name contains language like 'en'.</td>
+<td></td>
+</tr>
+    
+    
+<tr>
+<td>
+        
+`lsp-translations.key.details`
+
+</td>
+<td>🚫</td>
+<td>An optional regex pattern for the key of a translation which can provide extra details to the extension. Can be useful when your translation keys contains a language like 'en'.</td>
+<td>
+
+```json
+"^.+?\\.(?<language>.+?)\\."
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`lsp-translations.key.filter`
+
+</td>
+<td>🚫</td>
+<td>An optional regex pattern to filter out unneeded parts of a translation key. For example: if you have a translation key like `123.abc.key` and you only provide `key` to your translation function, you can use this setting to filter out the unneeded parts. The first regex group would be the correct key name.</td>
+<td></td>
+</tr>
+    
+  </tbody>
+</table>
 
 ## Known Issues
 
