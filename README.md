@@ -1,3 +1,12 @@
+```
+translate('h
+            ^---------------------------------------------------
+            | - hello                                       Hi! |
+            | - header.title     Autocomplete your translations |
+            | - header.sub       and more in Visual Studio Code |
+             ---------------------------------------------------
+```
+
 # vscode-lsp-translations
 
 An extension for VSCode which provides autocompletion for the translations within your project. Uses https://github.com/rbozan/lsp-translations under the hood.
