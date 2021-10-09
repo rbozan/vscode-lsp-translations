@@ -30,12 +30,13 @@ jobs:
         uses: "phips28/gh-action-bump-version@master"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USER: version-bump
+          GITHUB_USER: automated-version-bump
         with:
           commit-message: "ci: bumps version to {{version}} [skip ci]"
       - run: npm install
-      - name: Publish to Visual Studio Marketplace
+      - name: Build VSIX file
         uses: HaaLeo/publish-vscode-extension@v0
+        id: vsixBuild
         with:
           # pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           # registryUrl: https://marketplace.visualstudio.com
@@ -44,5 +45,5 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
-          path: |
-            ${{ steps.publishToOpenVSX.outputs.vsixPath }}
+          path: ${{ steps.vsixBuild.outputs.vsixPath }}
+          if-no-files-found: error
