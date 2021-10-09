@@ -26,12 +26,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: "version-bump"
+      - name: Bump version
         uses: "phips28/gh-action-bump-version@master"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_USER: version-bump
         with:
           commit-message: "ci: bumps version to {{version}} [skip ci]"
+      - run: npm install
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v0
         with:
