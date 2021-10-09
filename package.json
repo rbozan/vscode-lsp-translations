@@ -3,6 +3,17 @@
   "displayName": "vscode-lsp-translations",
   "description": "",
   "version": "0.1.2",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rbozan/vscode-lsp-translations.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rbozan/vscode-lsp-translations/issues"
+  },
+  "homepage": "https://github.com/rbozan/vscode-lsp-translations#readme",
+  "publisher": "rbozan",
   "engines": {
     "vscode": "^1.59.0"
   },
