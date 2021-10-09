@@ -2,7 +2,7 @@
   "name": "vscode-lsp-translations",
   "displayName": "vscode-lsp-translations",
   "description": "",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.59.0"
   },
@@ -23,24 +23,37 @@
       "properties": {
         "lsp-translations.translationFiles": {
           "type": "array",
-          "default": ["./translations.json", "./translations/*.json"],
+          "default": [
+            "./translations.json",
+            "./translations/*.json"
+          ],
           "description": "Glob patterns for the translation files which contain all the translations of your project.",
-          "examples": [["translations.json"]]
+          "examples": [
+            [
+              "translations.json"
+            ]
+          ]
         },
         "lsp-translations.fileName.details": {
           "type": "string",
           "description": "An optional regex pattern for the file name which can provide extra details to the extension. Can be useful when your translation file name contains language like 'en'.",
-          "examples": ["^.+?\\.(?<language>.+?)\\."]
+          "examples": [
+            "^.+?\\.(?<language>.+?)\\."
+          ]
         },
         "lsp-translations.key.details": {
           "type": "string",
           "description": "An optional regex pattern for the key of a translation which can provide extra details to the extension. Can be useful when your translation keys contains a language like 'en'.",
-          "examples": ["^.+?\\.(?<language>.+?)\\."]
+          "examples": [
+            "^.+?\\.(?<language>.+?)\\."
+          ]
         },
         "lsp-translations.key.filter": {
           "type": "string",
           "markdownDescription": "An optional regex pattern to filter out unneeded parts of a translation key. For example: if you have a translation key like `123.abc.key` and you only provide `key` to your translation function, you can use this setting to filter out the unneeded parts. The first regex group would be the correct key name.",
-          "examples": ["^.+?\\..+?\\.(.+$)"]
+          "examples": [
+            "^.+?\\..+?\\.(.+$)"
+          ]
         },
         "lsp-translations.trace.server": {
           "scope": "window",
