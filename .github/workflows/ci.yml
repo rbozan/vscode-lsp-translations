@@ -16,6 +16,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: 14.x
+    - name:  'Automated Version Bump'
+      uses:  'phips28/gh-action-bump-version@master'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        commit-message: 'CI: bumps version to {{version}} [skip ci]'
     - run: npm install
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
