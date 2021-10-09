@@ -32,9 +32,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           commit-message: "ci: bumps version to {{version}} [skip ci]"
-      - name: Publish extension
+      - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@v0
         with:
+          # pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          # registryUrl: https://marketplace.visualstudio.com
           pat: "todo-replace-this-path-for-publishing"
           dryRun: true
       - name: Upload artifacts
@@ -42,4 +44,3 @@ jobs:
         with:
           path: |
             ${{ steps.publishToOpenVSX.outputs.vsixPath }}
-
