@@ -23,7 +23,12 @@ For example if there is an image subfolder under your extension project workspac
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
-* https://github.com/rbozan/lsp-translations, which will automatically be downloaded on first startup.
+* https://github.com/rbozan/lsp-translations, which will automatically be downloaded on first startup of the extension.
+
+## Currently supported languages
+While `lsp-translations` theoretically works with any programming language, this extension is currently only enabled on a limited amount of programming languages and extensions, namely:
+- JavaScript (including JSX)
+- TypeScript (including TSX)
 
 ## Extension Settings
 
