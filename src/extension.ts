@@ -1,5 +1,6 @@
 import path = require("path");
 import * as vscode from "vscode";
+import { fetchOrUpdateServerBinaries } from "./downloader";
 
 import {
   LanguageClient,
@@ -11,34 +12,42 @@ import {
 
 let client: LanguageClient;
 
-export function activate(context: vscode.ExtensionContext) {
-  const translationFiles = vscode.workspace.getConfiguration("lsp-translations").get<string[]>("translationFiles");
+export async function activate(context: vscode.ExtensionContext) {
+  await fetchOrUpdateServerBinaries(context);
+
+  const translationFiles = vscode.workspace
+    .getConfiguration("lsp-translations")
+    .get<string[]>("translationFiles");
   let serverOptions: ServerOptions = {
     run: {
-      command: `--todo run --manifest-path ${context.asAbsolutePath(path.join('lsp-translations', 'Cargo.toml'))}`,
+      command: `--todo run --manifest-path ${context.asAbsolutePath(
+        path.join("lsp-translations", "Cargo.toml")
+      )}`,
     },
     debug: {
       command: `cargo`,
-      args: ['run'],
+      args: ["run"],
       transport: TransportKind.stdio,
       options: {
-        cwd: context.asAbsolutePath('lsp-translations'),
+        cwd: context.asAbsolutePath("lsp-translations"),
         shell: true,
-      }
+      },
     },
   };
 
   // Options to control the language client
   let clientOptions: LanguageClientOptions = {
-   revealOutputChannelOn: RevealOutputChannelOn.Info,
+    revealOutputChannelOn: RevealOutputChannelOn.Info,
     documentSelector: [{ scheme: "file", language: "javascript" }],
     synchronize: {
-      fileEvents: translationFiles?.map((globPattern) => vscode.workspace.createFileSystemWatcher(globPattern)),
+      fileEvents: translationFiles?.map((globPattern) =>
+        vscode.workspace.createFileSystemWatcher(globPattern)
+      ),
     },
   };
   vscode.window.showInformationMessage("loaded!");
   vscode.workspace.onDidChangeConfiguration((e) => {
-    vscode.window.showInformationMessage('Updated');
+    vscode.window.showInformationMessage("Updated");
   });
 
   // Create the language client and start the client.
