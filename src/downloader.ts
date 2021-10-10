@@ -23,9 +23,12 @@ export async function fetchOrUpdateServerBinaries(
     const result = await fetch(
       `https://api.github.com/repos/rbozan/lsp-translations/releases/${uri}`,
       {
-        // headers: {
-        //   authorization: "token **YOUR_TOKEN**",
-        // },
+        // TODO: Remove this secret when the repository has been made public
+        headers: process.env.GITHUB_TOKEN
+          ? {
+              authorization: `token ${process.env.GITHUB_TOKEN}`,
+            }
+          : undefined,
       }
     );
 
