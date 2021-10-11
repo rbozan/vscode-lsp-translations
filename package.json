@@ -2,7 +2,7 @@
   "name": "vscode-lsp-translations",
   "displayName": "vscode-lsp-translations",
   "description": "",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rbozan/vscode-lsp-translations.git"
