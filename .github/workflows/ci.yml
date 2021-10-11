@@ -18,12 +18,12 @@ jobs:
         if: runner.os == 'Linux'
         # TODO: Remove this secret when the repository has been made public
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.TESTING_GITHUB_TOKEN}}
       - run: npm test
         if: runner.os != 'Linux'
         # TODO: Remove this secret when the repository has been made public
         env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.TESTING_GITHUB_TOKEN}}
 
   release:
     needs: build
