@@ -13,3 +13,7 @@ src/**
 lsp-translations
 .gitmodules
 .github
+
+Dockerfile
+docker-compose.yml
+.dockerignore
