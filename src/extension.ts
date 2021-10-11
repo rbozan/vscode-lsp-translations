@@ -12,11 +12,14 @@ import {
   ServerOptions,
   TransportKind,
 } from "vscode-languageclient/node";
+import { ExtensionMode } from "vscode";
 
 let client: LanguageClient;
 
 export async function activate(context: vscode.ExtensionContext) {
-  await fetchOrUpdateServerBinaries(context);
+  if (context.extensionMode === ExtensionMode.Production) {
+    await fetchOrUpdateServerBinaries(context);
+  }
 
   const translationFiles = vscode.workspace
     .getConfiguration("lsp-translations")
