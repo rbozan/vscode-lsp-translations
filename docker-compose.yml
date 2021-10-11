@@ -2,5 +2,6 @@ version: "3.9"
 services:
   test:
     build: .
+    env_file: .env
     volumes:
       - .:/app/src
