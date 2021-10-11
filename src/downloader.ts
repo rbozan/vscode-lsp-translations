@@ -96,7 +96,7 @@ export function isServerBinaryInstalled(context: vscode.ExtensionContext) {
   return fs.existsSync(getServerBinaryExecutable(context));
 }
 
-function getServerBinaryFolder(context: vscode.ExtensionContext) {
+export function getServerBinaryFolder(context: vscode.ExtensionContext) {
   return context.asAbsolutePath("bin");
 }
 

@@ -45,21 +45,17 @@ suite("Extension Test Suite", () => {
   const context = new MockExtensionContext();
 
   test("Server binary is not installed", async () => {
-    fs.unlinkSync(downloader.getServerBinaryExecutable(context));
-    downloader.updateServerBinaryVersion(context, undefined);
+    assert.strictEqual(
+      downloader.getServerBinaryFolder(context),
+      path.join(os.tmpdir(), "bin")
+    );
+    fs.rmdirSync(downloader.getServerBinaryFolder(context), {
+      recursive: true,
+    });
+    /* fs.unlinkSync(downloader.getServerBinaryExecutable(context));
+    downloader.updateServerBinaryVersion(context, undefined); */
 
     assert.strictEqual(downloader.isServerBinaryInstalled(context), false);
-    assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
-  });
-
-  test("Server binary can be updated", async () => {
-    downloader.updateServerBinaryVersion(context, "0.0.1a");
-    assert.strictEqual(downloader.getServerBinaryVersion(context), "0.0.1a");
-
-    downloader.updateServerBinaryVersion(context, "0.0.2b");
-    assert.strictEqual(downloader.getServerBinaryVersion(context), "0.0.2b");
-
-    downloader.updateServerBinaryVersion(context, undefined);
     assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
   });
 
@@ -90,4 +86,15 @@ suite("Extension Test Suite", () => {
       "binary is incorrect version"
     );
   }).timeout(10000);
+
+  test("Server binary can be updated", async () => {
+    downloader.updateServerBinaryVersion(context, "0.0.1a");
+    assert.strictEqual(downloader.getServerBinaryVersion(context), "0.0.1a");
+
+    downloader.updateServerBinaryVersion(context, "0.0.2b");
+    assert.strictEqual(downloader.getServerBinaryVersion(context), "0.0.2b");
+
+    downloader.updateServerBinaryVersion(context, undefined);
+    assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
+  });
 });
