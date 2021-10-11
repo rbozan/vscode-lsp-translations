@@ -1,6 +1,9 @@
 import path = require("path");
 import * as vscode from "vscode";
-import { fetchOrUpdateServerBinaries } from "./downloader";
+import {
+  fetchOrUpdateServerBinaries,
+  getServerBinaryExecutable,
+} from "./downloader";
 
 import {
   LanguageClient,
@@ -20,9 +23,8 @@ export async function activate(context: vscode.ExtensionContext) {
     .get<string[]>("translationFiles");
   let serverOptions: ServerOptions = {
     run: {
-      command: `--todo run --manifest-path ${context.asAbsolutePath(
-        path.join("lsp-translations", "Cargo.toml")
-      )}`,
+      command: getServerBinaryExecutable(context),
+      transport: TransportKind.stdio,
     },
     debug: {
       command: `cargo`,

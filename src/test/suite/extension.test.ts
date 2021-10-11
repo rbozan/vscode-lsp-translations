@@ -8,22 +8,7 @@ import * as vscode from "vscode";
 
 // import * as extension from "../../extension";
 import * as downloader from "../../downloader";
-
-suite("Extension Test Suite", () => {
-  vscode.window.showInformationMessage("Start all tests.");
-
-  test("Sample test", () => {
-    assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-    assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-  });
-
-  test("Downloads lsp-translations", async () => {
-    assert.strictEqual(
-      await downloader.fetchOrUpdateServerBinaries(new MockExtensionContext()),
-      "latest"
-    );
-  });
-});
+import * as fs from "fs";
 
 import * as path from "path";
 import * as os from "os";
@@ -53,3 +38,56 @@ class MockExtensionContext implements vscode.ExtensionContext {
   extensionMode!: vscode.ExtensionMode;
   extension!: vscode.Extension<any>;
 }
+
+suite("Extension Test Suite", () => {
+  vscode.window.showInformationMessage("Start all tests.");
+
+  const context = new MockExtensionContext();
+
+  test("Server binary is not installed", async () => {
+    fs.unlinkSync(downloader.getServerBinaryExecutable(context));
+    downloader.updateServerBinaryVersion(context, undefined);
+
+    assert.strictEqual(downloader.isServerBinaryInstalled(context), false);
+    assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
+  });
+
+  test("Server binary can be updated", async () => {
+    downloader.updateServerBinaryVersion(context, "0.0.1a");
+    assert.strictEqual(downloader.getServerBinaryVersion(context), "0.0.1a");
+
+    downloader.updateServerBinaryVersion(context, "0.0.2b");
+    assert.strictEqual(downloader.getServerBinaryVersion(context), "0.0.2b");
+
+    downloader.updateServerBinaryVersion(context, undefined);
+    assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
+  });
+
+  test("Server binary wanted version", async () => {
+    assert.strictEqual(
+      downloader.getWantedServerBinaryVersion(context),
+      "latest"
+    );
+  });
+
+  test("Fetch or update server binaries", async () => {
+    assert.strictEqual(
+      await downloader.fetchOrUpdateServerBinaries(context),
+      "latest",
+      "fetchOrUpdateServerBinaries does not return correct version"
+    );
+
+    assert.strictEqual(downloader.getServerBinaryVersion(context), "latest");
+
+    assert.strictEqual(
+      downloader.isServerBinaryInstalled(context),
+      true,
+      "binary is not installed"
+    );
+    assert.strictEqual(
+      downloader.isServerBinaryCorrectVersion(context),
+      true,
+      "binary is incorrect version"
+    );
+  }).timeout(10000);
+});

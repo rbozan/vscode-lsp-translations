@@ -74,8 +74,6 @@ async function downloadServerBinary(
     const dest = getServerBinaryExecutable(context);
     const file = fs.createWriteStream(dest);
 
-    console.log("123");
-
     https
       .get(downloadUrl, function (response) {
         response.pipe(file);
@@ -88,13 +86,13 @@ async function downloadServerBinary(
       })
       .on("error", function (err) {
         fs.unlink(dest, () => {
-          throw err;
+          reject(err);
         });
       });
   });
 }
 
-function isServerBinaryInstalled(context: vscode.ExtensionContext) {
+export function isServerBinaryInstalled(context: vscode.ExtensionContext) {
   return fs.existsSync(getServerBinaryExecutable(context));
 }
 
@@ -102,7 +100,7 @@ function getServerBinaryFolder(context: vscode.ExtensionContext) {
   return context.asAbsolutePath("bin");
 }
 
-function getServerBinaryExecutable(context: vscode.ExtensionContext) {
+export function getServerBinaryExecutable(context: vscode.ExtensionContext) {
   return vscode.Uri.joinPath(
     vscode.Uri.file(getServerBinaryFolder(context)),
     os.platform() !== "win32" ? "lsp-translations" : "lsp-translations.exe"
@@ -110,36 +108,43 @@ function getServerBinaryExecutable(context: vscode.ExtensionContext) {
 }
 
 // Versioning
-function updateServerBinaryVersion(
+export function updateServerBinaryVersion(
   context: vscode.ExtensionContext,
-  version: string | Buffer
+  version: string | Buffer | undefined
 ) {
   const versionPath = vscode.Uri.joinPath(
     vscode.Uri.file(getServerBinaryFolder(context)),
     "installed_version"
   ).fsPath;
 
-  return fs.writeFileSync(versionPath, version);
+  return version !== undefined
+    ? fs.writeFileSync(versionPath, version)
+    : fs.unlinkSync(versionPath);
 }
-function getServerBinaryVersion(context: vscode.ExtensionContext) {
+
+export function getServerBinaryVersion(context: vscode.ExtensionContext) {
   const versionPath = vscode.Uri.joinPath(
     vscode.Uri.file(getServerBinaryFolder(context)),
     "installed_version"
   ).fsPath;
 
-  return !fs.existsSync(versionPath) ? undefined : fs.readFileSync(versionPath);
+  return !fs.existsSync(versionPath)
+    ? undefined
+    : fs.readFileSync(versionPath).toString();
 }
 
-function getWantedServerBinaryVersion(context: vscode.ExtensionContext) {
+export function getWantedServerBinaryVersion(context: vscode.ExtensionContext) {
   const versionPath = vscode.Uri.joinPath(
     vscode.Uri.file(getServerBinaryFolder(context)),
     "wanted_version"
   ).fsPath;
 
-  return !fs.existsSync(versionPath) ? "latest" : fs.readFileSync(versionPath);
+  return !fs.existsSync(versionPath)
+    ? "latest"
+    : fs.readFileSync(versionPath).toString();
 }
 
-function isServerBinaryCorrectVersion(context: vscode.ExtensionContext) {
+export function isServerBinaryCorrectVersion(context: vscode.ExtensionContext) {
   return (
     getServerBinaryVersion(context) === getWantedServerBinaryVersion(context)
   );
