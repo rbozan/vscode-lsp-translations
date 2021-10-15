@@ -6,6 +6,7 @@ import * as https from "https";
 import * as os from "os";
 import * as path from "path";
 import { platformArchTriples } from "@napi-rs/triples";
+import * as tar from "tar-fs";
 
 export async function fetchOrUpdateServerBinaries(
   context: vscode.ExtensionContext
@@ -83,29 +84,68 @@ async function downloadServerBinary(
     }
 
     // Download the binaery
-    const dest = getServerBinaryExecutable(context);
+    const dest = path.join(os.tmpdir(), "lsp-translations-download.tar");
     const file = fs.createWriteStream(dest);
 
+    console.log("Downloading", downloadUrl, "...");
+
     https
-      .get(downloadUrl, function (response) {
-        response.pipe(file);
-        file.on("finish", function () {
-          file.close();
-          updateServerBinaryVersion(context, version);
-          console.info(
-            "Downloaded server binary version",
-            version,
-            "from",
-            downloadUrl
-          );
-          resolve(version);
-        });
-      })
+      .get(
+        downloadUrl,
+        {
+          headers: process.env.GITHUB_TOKEN
+            ? {
+                authorization: `token ${process.env.GITHUB_TOKEN}`,
+              }
+            : undefined,
+        },
+        function (response) {
+          if (response.statusCode !== 302) {
+            return reject(`Status code of ${response.statusCode} received`);
+          }
+
+          response.pipe(file);
+          file.on("finish", async function () {
+            file.close();
+            console.info(
+              "Downloaded server binary version",
+              version,
+              "from",
+              downloadUrl,
+              "to",
+              dest
+            );
+            await extractServerBinary(context, dest);
+            updateServerBinaryVersion(context, version);
+            resolve(version);
+          });
+        }
+      )
       .on("error", function (err) {
         fs.unlink(dest, () => {
           reject(err);
         });
       });
+  });
+}
+
+function extractServerBinary(
+  context: vscode.ExtensionContext,
+  archivePath: string
+) {
+  return new Promise((resolve, reject) => {
+    const test = fs
+      .createReadStream(archivePath)
+      .pipe(tar.extract(getServerBinaryFolder(context)));
+
+    test.on("finish", (e) => {
+      console.log("FINSIHED", e);
+      resolve(undefined);
+    });
+
+    test.on("error", (e) => {
+      reject(e);
+    });
   });
 }
 
