@@ -1,5 +1,4 @@
 FROM node:latest
-WORKDIR /app/src
 
 # Download latest listing of available packages
 RUN apt-get -y update
@@ -9,6 +8,26 @@ RUN apt-get -y install libxshmfence1 libnss3 libatk1.0-0 libatk-bridge2.0-0 libd
 
 # X / testing dependency
 RUN apt-get -y install xvfb
+
+
+WORKDIR /home/node/app/
+
+# RUN chown node .
+
+# COPY ./package.json .
+# COPY ./package-lock.json .
+# RUN chown node ./package.json
+# RUN chown node ./package-lock.json
+
+# RUN npm install
+
+# COPY . .
+# RUN chown -R node ./out
+
+COPY ./bin /tmp/bin
+RUN chown -R node /tmp/
+
+
 
 USER 1000:1000
 

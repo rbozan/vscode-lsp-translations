@@ -4,4 +4,4 @@ services:
     build: .
     env_file: .env
     volumes:
-      - .:/app/src
+      - .:/home/node/app

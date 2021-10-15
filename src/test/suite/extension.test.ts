@@ -12,6 +12,7 @@ import * as fs from "fs";
 
 import * as path from "path";
 import * as os from "os";
+import { execFileSync, execSync } from "child_process";
 
 class MockExtensionContext implements vscode.ExtensionContext {
   asAbsolutePath(relativePath: string): string {
@@ -49,31 +50,35 @@ suite("Extension Test Suite", () => {
       downloader.getServerBinaryFolder(context),
       path.join(os.tmpdir(), "bin")
     );
-    fs.rmdirSync(downloader.getServerBinaryFolder(context), {
-      recursive: true,
-    });
-    /* fs.unlinkSync(downloader.getServerBinaryExecutable(context));
-    downloader.updateServerBinaryVersion(context, undefined); */
+
+    if (fs.existsSync(downloader.getServerBinaryExecutable(context))) {
+      fs.unlinkSync(downloader.getServerBinaryExecutable(context));
+    }
 
     assert.strictEqual(downloader.isServerBinaryInstalled(context), false);
     assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
   });
 
-  test("Server binary wanted version", async () => {
+  test("Server binary wanted version equals submodule tag version", async () => {
     assert.strictEqual(
       downloader.getWantedServerBinaryVersion(context),
-      "latest"
+      execSync("cd ./lsp-translations && git describe --exact-match --tags")
+        .toString()
+        .trim()
     );
   });
 
   test("Fetch or update server binaries", async () => {
     assert.strictEqual(
       await downloader.fetchOrUpdateServerBinaries(context),
-      "latest",
+      downloader.getWantedServerBinaryVersion(context),
       "fetchOrUpdateServerBinaries does not return correct version"
     );
 
-    assert.strictEqual(downloader.getServerBinaryVersion(context), "latest");
+    assert.strictEqual(
+      downloader.getServerBinaryVersion(context),
+      downloader.getWantedServerBinaryVersion(context)
+    );
 
     assert.strictEqual(
       downloader.isServerBinaryInstalled(context),
@@ -96,5 +101,11 @@ suite("Extension Test Suite", () => {
 
     downloader.updateServerBinaryVersion(context, undefined);
     assert.strictEqual(downloader.getServerBinaryVersion(context), undefined);
+  });
+
+  test("Server binary can be run", async () => {
+    execFileSync(downloader.getServerBinaryExecutable(context), undefined, {
+      timeout: 5000,
+    });
   });
 });

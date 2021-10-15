@@ -4,6 +4,8 @@ import fetch from "node-fetch";
 import * as fs from "fs";
 import * as https from "https";
 import * as os from "os";
+import * as path from "path";
+import { platformArchTriples } from "@napi-rs/triples";
 
 export async function fetchOrUpdateServerBinaries(
   context: vscode.ExtensionContext
@@ -33,11 +35,21 @@ export async function fetchOrUpdateServerBinaries(
     );
 
     const json = await result.json();
-    const asset = json.assets[0];
+    const supportedTargets =
+      platformArchTriples[process.platform][process.arch];
+    const asset = json.assets.find((asset: { name: string }) => {
+      const targetName = path.parse(asset.name).name;
+
+      return supportedTargets.some((triplet) => triplet.raw === targetName);
+    });
+
+    if (!asset) {
+      throw new Error("No compatible asset found");
+    }
     return downloadServerBinary(
       context,
-      asset.browser_download_url
-      // json.tag_name
+      asset.browser_download_url,
+      json.tag_name
     );
   } catch (e) {
     if (isServerBinaryInstalled(context)) {
@@ -80,7 +92,12 @@ async function downloadServerBinary(
         file.on("finish", function () {
           file.close();
           updateServerBinaryVersion(context, version);
-          console.info("Downloaded server binary", version);
+          console.info(
+            "Downloaded server binary version",
+            version,
+            "from",
+            downloadUrl
+          );
           resolve(version);
         });
       })
@@ -141,7 +158,7 @@ export function getWantedServerBinaryVersion(context: vscode.ExtensionContext) {
 
   return !fs.existsSync(versionPath)
     ? "latest"
-    : fs.readFileSync(versionPath).toString();
+    : fs.readFileSync(versionPath).toString().trim();
 }
 
 export function isServerBinaryCorrectVersion(context: vscode.ExtensionContext) {
