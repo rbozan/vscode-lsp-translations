@@ -22,111 +22,123 @@ export async function fetchOrUpdateServerBinaries(
   const uri =
     wantedVersion === "latest" ? wantedVersion : `tags/${wantedVersion}`;
 
-  try {
-    const result = await fetch(
-      `https://api.github.com/repos/rbozan/lsp-translations/releases/${uri}`,
-      {
-        // TODO: Remove this secret when the repository has been made public
-        headers: process.env.GITHUB_TOKEN
-          ? {
-              authorization: `token ${process.env.GITHUB_TOKEN}`,
-            }
-          : undefined,
+  return vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Window,
+      title: `Downloading ${wantedVersion}`,
+    },
+    async (progress) => {
+      try {
+        // Fetch wanted releases
+        progress.report({
+          message: `Fetching assets of ${wantedVersion}...`,
+        });
+
+        const result = await fetch(
+          `https://api.github.com/repos/rbozan/lsp-translations/releases/${uri}`,
+          {
+            // TODO: Remove this secret when the repository has been made public
+            headers: process.env.GITHUB_TOKEN
+              ? {
+                  authorization: `token ${process.env.GITHUB_TOKEN}`,
+                }
+              : undefined,
+          }
+        );
+
+        // Check which assets are supported by current system
+        const json = await result.json();
+        const supportedTargets =
+          platformArchTriples[process.platform][process.arch];
+        const asset = json.assets.find((asset: { name: string }) => {
+          const targetName = path.parse(asset.name).name;
+
+          return supportedTargets.some((triplet) => triplet.raw === targetName);
+        });
+
+        if (!asset) {
+          throw new Error("No compatible asset found");
+        }
+        progress.report({
+          message: `Downloading server binary...`,
+        });
+
+        return downloadServerBinary(context, asset.url, json.tag_name);
+      } catch (e) {
+        if (isServerBinaryInstalled(context)) {
+          vscode.window.showWarningMessage(
+            `Could not fetch the latest binary of lsp-translations (${uri}). Falling back to the currently installed version of ${getServerBinaryVersion(
+              context
+            )}. This might lead to unexpected results.`
+          );
+
+          console.error(e);
+        } else {
+          vscode.window.showErrorMessage(
+            `Could not fetch the latest binary of lsp-translations (${uri}). This extension will not work until the server binary is downloaded.`
+          );
+
+          throw e;
+        }
       }
-    );
-
-    const json = await result.json();
-    const supportedTargets =
-      platformArchTriples[process.platform][process.arch];
-    const asset = json.assets.find((asset: { name: string }) => {
-      const targetName = path.parse(asset.name).name;
-
-      return supportedTargets.some((triplet) => triplet.raw === targetName);
-    });
-
-    if (!asset) {
-      throw new Error("No compatible asset found");
     }
-    return downloadServerBinary(
-      context,
-      asset.browser_download_url,
-      json.tag_name
-    );
-  } catch (e) {
-    if (isServerBinaryInstalled(context)) {
-      vscode.window.showWarningMessage(
-        `Could not fetch the latest binary of lsp-translations (${uri}). Falling back to the currently installed version of ${getServerBinaryVersion(
-          context
-        )}. This might lead to unexpected results.`
-      );
-
-      console.error(e);
-    } else {
-      vscode.window.showErrorMessage(
-        `Could not fetch the latest binary of lsp-translations (${uri}). This extension will not work until the server binary is downloaded.`
-      );
-
-      throw e;
-    }
-  }
+  );
 }
+
+import { pipeline } from "stream";
+import { promisify } from "util";
 
 async function downloadServerBinary(
   context: vscode.ExtensionContext,
   downloadUrl: string,
   version = getWantedServerBinaryVersion(context)
 ) {
-  return new Promise(async (resolve, reject) => {
-    // Prepare the folder
-    const folder = getServerBinaryFolder(context);
-    if (!fs.existsSync(folder)) {
-      fs.mkdirSync(folder);
-    }
+  // Prepare the folder
+  const folder = getServerBinaryFolder(context);
+  if (!fs.existsSync(folder)) {
+    fs.mkdirSync(folder);
+  }
 
-    // Download the binaery
-    const dest = path.join(os.tmpdir(), "lsp-translations-download.tar");
-    const file = fs.createWriteStream(dest);
+  // Download the binary
+  const dest = path.join(os.tmpdir(), "lsp-translations-download.tar");
+  const file = fs.createWriteStream(dest);
 
-    console.log("Downloading", downloadUrl, "...");
+  console.log("Downloading", downloadUrl, "...");
 
-    https
-      .get(
-        downloadUrl,
-        {
-          headers: process.env.GITHUB_TOKEN
-            ? {
-                authorization: `token ${process.env.GITHUB_TOKEN}`,
-              }
-            : undefined,
-        },
-        function (response) {
-          if (response.statusCode !== 302) {
-            return reject(`Status code of ${response.statusCode} received`);
-          }
+  const streamPipeline = promisify(pipeline);
 
-          response.pipe(file);
-          file.on("finish", async function () {
-            file.close();
-            console.info(
-              "Downloaded server binary version",
-              version,
-              "from",
-              downloadUrl,
-              "to",
-              dest
-            );
-            await extractServerBinary(context, dest);
-            updateServerBinaryVersion(context, version);
-            resolve(version);
-          });
-        }
-      )
-      .on("error", function (err) {
-        fs.unlink(dest, () => {
-          reject(err);
-        });
-      });
+  const response = await fetch(downloadUrl, {
+    headers: {
+      authorization: process.env.GITHUB_TOKEN
+        ? `token ${process.env.GITHUB_TOKEN}`
+        : "",
+      accept: "application/octet-stream",
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      "User-Agent": "vscode-lsp-translations",
+    },
   });
+  /* {
+    }
+  ); */
+
+  if (!response.ok) {
+    throw new Error(`unexpected response ${response.statusText}`);
+  }
+
+  await streamPipeline(response.body, file);
+
+  file.close();
+  console.info(
+    "Downloaded server binary version",
+    version,
+    "from",
+    downloadUrl,
+    "to",
+    dest
+  );
+  await extractServerBinary(context, dest);
+  updateServerBinaryVersion(context, version);
+  return version;
 }
 
 function extractServerBinary(
@@ -138,8 +150,7 @@ function extractServerBinary(
       .createReadStream(archivePath)
       .pipe(tar.extract(getServerBinaryFolder(context)));
 
-    test.on("finish", (e) => {
-      console.log("FINSIHED", e);
+    test.on("finish", () => {
       resolve(undefined);
     });
 
