@@ -3,8 +3,8 @@
 translate('h
             ^------------------------------------------------------
             | - hello                                       Hi! 👋 |
-            | - header.title     Autocomplete your translations 📔 |
-            | - header.sub       and more in Visual Studio Code 👩‍💻 |
+            | - header.title     Do more with your translations 📔 |
+            | - header.sub                in Visual Studio Code 👩‍💻 |
              ------------------------------------------------------
 ```
 **</center>**
