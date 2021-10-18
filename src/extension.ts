@@ -43,7 +43,13 @@ export async function activate(context: vscode.ExtensionContext) {
   // Options to control the language client
   let clientOptions: LanguageClientOptions = {
     revealOutputChannelOn: RevealOutputChannelOn.Info,
-    documentSelector: [{ scheme: "file", language: "javascript" }],
+    documentSelector: [
+      { scheme: "file", language: "javascript" },
+      { scheme: "file", language: "javascriptreact" },
+      { scheme: "file", language: "typescript" },
+      { scheme: "file", language: "typescriptreact" },
+    ],
+    // TODO: Make this information come from dynamic capabilities in server
     synchronize: {
       fileEvents: translationFiles?.map((globPattern) =>
         vscode.workspace.createFileSystemWatcher(globPattern)
@@ -52,7 +58,7 @@ export async function activate(context: vscode.ExtensionContext) {
   };
   vscode.window.showInformationMessage("loaded!");
   vscode.workspace.onDidChangeConfiguration((e) => {
-    vscode.window.showInformationMessage("Updated");
+    vscode.window.showInformationMessage("Updated configuration");
   });
 
   // Create the language client and start the client.
