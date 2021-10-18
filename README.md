@@ -53,6 +53,11 @@ An optional regex pattern for the file name which can provide extra details to t
 
 #### Default
 🚫
+
+#### Example(s)
+```json
+"(?P<language>.+?)\\.json"
+```
 ___
 ### `lsp-translations.key.details`
 An optional regex pattern for the key of a translation which can provide extra details to the extension. Can be useful when your translation keys contains a language like 'en'.
