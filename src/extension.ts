@@ -34,7 +34,7 @@ export async function activate(context: vscode.ExtensionContext) {
       args: ["run"],
       transport: TransportKind.stdio,
       options: {
-        cwd: context.asAbsolutePath("lsp-translations"),
+        cwd: context.asAbsolutePath("../lsp-translations"),
         shell: true,
       },
     },
@@ -49,16 +49,11 @@ export async function activate(context: vscode.ExtensionContext) {
       { scheme: "file", language: "typescript" },
       { scheme: "file", language: "typescriptreact" },
     ],
-    // TODO: Make this information come from dynamic capabilities in server
-    synchronize: {
-      fileEvents: translationFiles?.map((globPattern) =>
-        vscode.workspace.createFileSystemWatcher(globPattern)
-      ),
-    },
   };
   vscode.window.showInformationMessage("loaded!");
   vscode.workspace.onDidChangeConfiguration((e) => {
     vscode.window.showInformationMessage("Updated configuration");
+    console.log('e', e)
   });
 
   // Create the language client and start the client.
