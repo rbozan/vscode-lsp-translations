@@ -53,7 +53,7 @@ export async function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage("loaded!");
   vscode.workspace.onDidChangeConfiguration((e) => {
     vscode.window.showInformationMessage("Updated configuration");
-    console.log('e', e)
+    console.log("e updated config", e);
   });
 
   // Create the language client and start the client.

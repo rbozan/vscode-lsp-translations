@@ -207,9 +207,7 @@ export function getWantedServerBinaryVersion(context: vscode.ExtensionContext) {
     "wanted_version"
   ).fsPath;
 
-  return !fs.existsSync(versionPath)
-    ? "latest"
-    : fs.readFileSync(versionPath).toString().trim();
+  return fs.readFileSync(versionPath).toString().trim();
 }
 
 export function isServerBinaryCorrectVersion(context: vscode.ExtensionContext) {

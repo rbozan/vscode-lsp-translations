@@ -24,11 +24,6 @@ WORKDIR /home/node/app/
 # COPY . .
 # RUN chown -R node ./out
 
-COPY ./bin /tmp/bin
-RUN chown -R node /tmp/
-
-
-
 USER 1000:1000
 
 CMD [ "sh", "-c", "xvfb-run -a npm test" ]
