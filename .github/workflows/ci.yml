@@ -1,14 +1,49 @@
 on: push
 
 jobs:
+  wanted_version:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+          fetch-depth: 0
+          # TODO: Remove this secret when the repository has been made public
+          token: ${{secrets.TESTING_GITHUB_TOKEN}}
+      - name: Set wanted version
+        run: |
+          mkdir ./bin
+          (cd ./lsp-translations && git describe --exact-match --tags) > ./bin/wanted_version
+          cat ./bin/wanted_version
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: wanted_version
+          path: ./bin/wanted_version
+          if-no-files-found: error
+
   build:
+    needs: wanted_version
+
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
+
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        # with:
+        #   submodules: true
+        #   fetch-depth: 0
+        #   # TODO: Remove this secret when the repository has been made public
+        #   token: ${{secrets.TESTING_GITHUB_TOKEN}}
+      - name: Retrieve wanted version
+        uses: actions/download-artifact@master
+        with:
+          name: wanted_version
+          path: ./bin
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
@@ -26,12 +61,17 @@ jobs:
           GITHUB_TOKEN: ${{secrets.TESTING_GITHUB_TOKEN}}
 
   release:
-    needs: build
+    needs: [wanted_version, build]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Retrieve wanted version
+        uses: actions/download-artifact@master
+        with:
+          name: wanted_version
+          path: ./bin
       - name: Bump version
         uses: "phips28/gh-action-bump-version@master"
         env:
