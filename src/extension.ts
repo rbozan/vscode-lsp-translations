@@ -48,9 +48,9 @@ export async function activate(context: vscode.ExtensionContext) {
       { scheme: "file", language: "javascriptreact" },
       { scheme: "file", language: "typescript" },
       { scheme: "file", language: "typescriptreact" },
+      { scheme: "file", language: "ruby" },
     ],
   };
-  vscode.window.showInformationMessage("loaded!");
   vscode.workspace.onDidChangeConfiguration((e) => {
     vscode.window.showInformationMessage("Updated configuration");
     console.log("e updated config", e);
