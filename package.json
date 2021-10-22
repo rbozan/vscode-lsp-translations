@@ -56,7 +56,7 @@
               "translations.yml"
             ],
             [
-              "./translations./*.yml"
+              "./translations/*.yml"
             ]
           ]
         },
