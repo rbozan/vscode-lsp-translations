@@ -39,12 +39,24 @@
           "type": "array",
           "default": [
             "./translations.json",
-            "./translations/*.json"
+            "./translations/*.json",
+
+            "./translations.yml",
+            "./translations/*.yml",
+
+            "./translations.yaml",
+            "./translations/*.yaml"
           ],
           "description": "Glob patterns for the translation files which contain all the translations of your project.",
           "examples": [
             [
               "translations.json"
+            ],
+            [
+              "translations.yml"
+            ],
+            [
+              "./translations./*.yml"
             ]
           ]
         },

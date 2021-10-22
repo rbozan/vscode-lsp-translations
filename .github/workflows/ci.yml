@@ -23,7 +23,7 @@ jobs:
           path: ./bin/wanted_version
           if-no-files-found: error
 
-  build:
+  test:
     needs: wanted_version
 
     strategy:
@@ -61,7 +61,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.TESTING_GITHUB_TOKEN}}
 
   release:
-    needs: [wanted_version, build]
+    needs: [wanted_version, test]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
