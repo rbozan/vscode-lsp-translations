@@ -2,7 +2,7 @@
   "name": "vscode-lsp-translations",
   "displayName": "vscode-lsp-translations",
   "description": "Provides autocompletion for the translations in your project.",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rbozan/vscode-lsp-translations.git"
@@ -26,7 +26,13 @@
   "categories": [
     "Other"
   ],
-  "keywords": ["i18n", "translate", "translation", "lsp", "autocompletion"],
+  "keywords": [
+    "i18n",
+    "translate",
+    "translation",
+    "lsp",
+    "autocompletion"
+  ],
   "activationEvents": [
     "onLanguage:javascript",
     "onLanguage:javascriptreact",
