@@ -74,10 +74,8 @@ jobs:
         uses: HaaLeo/publish-vscode-extension@v0
         id: vsixBuild
         with:
-          # pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
-          # registryUrl: https://marketplace.visualstudio.com
-          pat: "todo-replace-this-path-for-publishing"
-          dryRun: true
+          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          registryUrl: https://marketplace.visualstudio.com
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
