@@ -8,7 +8,7 @@
     "url": "git+https://github.com/rbozan/vscode-lsp-translations.git"
   },
   "author": "Robin Bozan",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/rbozan/vscode-lsp-translations/issues"
   },
