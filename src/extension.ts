@@ -52,7 +52,6 @@ export async function activate(context: vscode.ExtensionContext) {
     ],
   };
   vscode.workspace.onDidChangeConfiguration((e) => {
-    vscode.window.showInformationMessage("Updated configuration");
     console.log("e updated config", e);
   });
 
