@@ -2,11 +2,10 @@ import * as vscode from "vscode";
 
 import fetch from "node-fetch";
 import * as fs from "fs";
-import * as https from "https";
 import * as os from "os";
 import * as path from "path";
 import { platformArchTriples } from "@napi-rs/triples";
-import * as tar from "tar-fs";
+import * as unzipper from "unzipper";
 
 export async function fetchOrUpdateServerBinaries(
   context: vscode.ExtensionContext
@@ -33,6 +32,8 @@ export async function fetchOrUpdateServerBinaries(
         progress.report({
           message: `Fetching assets of ${wantedVersion}...`,
         });
+
+        console.log(`Fetching assets of ${wantedVersion}`);
 
         const result = await fetch(
           `https://api.github.com/repos/rbozan/lsp-translations/releases/${uri}`,
@@ -100,7 +101,7 @@ async function downloadServerBinary(
   }
 
   // Download the binary
-  const dest = path.join(os.tmpdir(), "lsp-translations-download.tar");
+  const dest = path.join(os.tmpdir(), "lsp-translations-download.zip");
   const file = fs.createWriteStream(dest);
 
   console.log("Downloading", downloadUrl, "...");
@@ -146,15 +147,25 @@ function extractServerBinary(
   archivePath: string
 ) {
   return new Promise((resolve, reject) => {
-    const test = fs
+    const extraction = fs
       .createReadStream(archivePath)
-      .pipe(tar.extract(getServerBinaryFolder(context)));
+      .pipe(unzipper.Extract({ path: getServerBinaryFolder(context) }));
 
-    test.on("finish", () => {
+    extraction.on("entry", (data) => {
+      console.log(
+        `Extracted ${data.name} to ${getServerBinaryFolder(context)}`
+      );
+    });
+
+    extraction.on("finish", () => {
+      console.log("Finished extracting");
+      if (os.platform() !== "win32") {
+        fs.chmodSync(getServerBinaryExecutable(context), 0o755);
+      }
       resolve(undefined);
     });
 
-    test.on("error", (e) => {
+    extraction.on("error", (e) => {
       reject(e);
     });
   });
