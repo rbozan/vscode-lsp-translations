@@ -25,14 +25,14 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 This extension requires https://github.com/rbozan/lsp-translations which will automatically be downloaded or updated on startup.
-* Translation files must be in `.json` format for now.  Supporting multiple formats is being worked on in the [Treesitter issue](https://github.com/rbozan/lsp-translations/issues/10).
+* Translation files must be in `.json` or `.yaml`/`.yml` format for now. Supporting other formats is being worked on in the [Treesitter issue](https://github.com/rbozan/lsp-translations/issues/10).
 * While  `lsp-translations`  theoretically  works  with  any  programming  language,  this  extension  is  currently  only  enabled  on  a  limited  amount  of  programming  languages  and  extensions,  namely:
 
 	-  JavaScript  (including  JSX)
 
 	-  TypeScript  (including  TSX)
 
-  -  Ruby
+	-  Ruby
 
 ## Extension Settings
 
@@ -42,7 +42,7 @@ ___
 ###  `lsp-translations.translationFiles`
 Glob patterns for the translation files which contain all the translations of your project.
 
-#### Default
+#### Default ( HAS TO BE UPDTED )
 ```json
 [
 	"./translations.json",
