@@ -51,9 +51,6 @@ export async function activate(context: vscode.ExtensionContext) {
       { scheme: "file", language: "ruby" },
     ],
   };
-  vscode.workspace.onDidChangeConfiguration((e) => {
-    console.log("e updated config", e);
-  });
 
   // Create the language client and start the client.
   client = new LanguageClient(
