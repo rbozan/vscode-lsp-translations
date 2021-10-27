@@ -21,9 +21,6 @@ export async function activate(context: vscode.ExtensionContext) {
     await fetchOrUpdateServerBinaries(context);
   }
 
-  const translationFiles = vscode.workspace
-    .getConfiguration("lsp-translations")
-    .get<string[]>("translationFiles");
   let serverOptions: ServerOptions = {
     run: {
       command: getServerBinaryExecutable(context),
