@@ -15,13 +15,13 @@ An extension for VSCode which provides autocompletion for the translations withi
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### Autocompletion for your translations
 
-For example if there is an image subfolder under your extension project workspace:
+https://user-images.githubusercontent.com/7997154/139867598-1ab67565-07e1-40c4-b05f-587a509dda5c.mp4
 
-\!\[feature X\]\(images/feature-x.png\)
+### Hovering over your translation keys gives you information
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+https://user-images.githubusercontent.com/7997154/139867604-6939e486-e3ba-4664-9318-546146328adf.mp4
 
 ## Requirements
 This extension requires https://github.com/rbozan/lsp-translations which will automatically be downloaded or updated on startup.
@@ -42,7 +42,7 @@ ___
 ###  `lsp-translations.translationFiles`
 Glob patterns for the translation files which contain all the translations of your project.
 
-#### Default ( HAS TO BE UPDTED )
+#### Default ( HAS TO BE UPDATED FOR INCLUDE + EXCLUDE )
 ```json
 [
 	"./translations.json",
