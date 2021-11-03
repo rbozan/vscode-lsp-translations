@@ -49,7 +49,7 @@
     "configuration": {
       "title": "lsp-translations",
       "properties": {
-        "lsp-translations.translationFiles": {
+        "lsp-translations.translationFiles.include": {
           "type": "array",
           "default": [
             "./translations.json",
@@ -69,6 +69,19 @@
             ],
             [
               "./translations/*.yml"
+            ]
+          ]
+        },
+        "lsp-translations.translationFiles.exclude": {
+          "type": "array",
+          "default": [],
+          "description": "Glob patterns for the files which match the patterns in `lsp-translations.translationFiles.include` but should not be included as translation file.",
+          "examples": [
+            [
+              "translations.config.json"
+            ],
+            [
+              "translations.config.yml"
             ]
           ]
         },
