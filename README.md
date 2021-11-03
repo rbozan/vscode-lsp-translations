@@ -34,27 +34,46 @@ This extension requires https://github.com/rbozan/lsp-translations which will au
 
 	-  Ruby
 
+
+## Quick start
+1. Install the extension on *TODO: Add VSCode extension link*
+2. Add the configuration under [#Common configuration](Common configuration) to your workspace-settings
+3. `translate(` away! (or `t(`, `translate`, `I18n.t(`),
+
 ## Extension Settings
 
 This extension contributes the following settings which are recommended to set as workspace settings:
 
 ___
-###  `lsp-translations.translationFiles`
+###  `lsp-translations.translationFiles.include` (required)
 Glob patterns for the translation files which contain all the translations of your project.
 
-#### Default ( HAS TO BE UPDATED FOR INCLUDE + EXCLUDE )
+#### Default
 ```json
 [
 	"./translations.json",
-	"./translations/*.json"
+	"./translations/*.json",
+	"./translations.yml",
+	"./translations/*.yml",
+	"./translations.yaml",
+	"./translations/*.yaml"
 ]
+```
+
+___
+###  `lsp-translations.translationFiles.exclude` (required)
+Glob patterns for the files which match the patterns in `lsp-translations.translationFiles.include` but should not be included as translation file.
+
+#### Default
+```json
+[]
 ```
 ___
 ### `lsp-translations.fileName.details`
 An optional regex pattern for the file name which can provide extra details to the extension. Can be useful when your translation file name contains language like 'en'.
 
 #### Default
-🚫
+None.
 
 #### Example(s)
 ```json
@@ -65,7 +84,7 @@ ___
 An optional regex pattern for the key of a translation which can provide extra details to the extension. Can be useful when your translation keys contains a language like 'en'.
 
 #### Default
-🚫
+None.
 
 #### Example(s)
 
@@ -77,7 +96,7 @@ ___
 An optional regex pattern to filter out unneeded parts of a translation key.
 
 #### Default
-🚫
+None.
 
 #### Example(s)
 If you have a translation key like `123.abc.key` and you only provide `key` to the `translation`function in your code, you can use this setting to filter out the unneeded parts. The first regex group would then be the correct key to be used. In the case of `123.abc.key` you can use the following regex:
