@@ -46,6 +46,7 @@ export async function activate(context: vscode.ExtensionContext) {
       { scheme: "file", language: "typescript" },
       { scheme: "file", language: "typescriptreact" },
       { scheme: "file", language: "ruby" },
+      { scheme: "file", language: "php" },
     ],
   };
 

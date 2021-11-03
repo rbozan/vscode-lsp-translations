@@ -38,7 +38,8 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescript",
     "onLanguage:typescriptreact",
-    "onLanguage:ruby"
+    "onLanguage:ruby",
+    "onLanguage:php"
   ],
   "main": "./out/extension.js",
   "contributes": {

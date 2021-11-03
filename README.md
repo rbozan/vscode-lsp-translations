@@ -34,6 +34,8 @@ This extension requires https://github.com/rbozan/lsp-translations which will au
 
   -  Ruby
 
+	-  PHP
+
 ## Extension Settings
 
 This extension contributes the following settings which are recommended to set as workspace settings:
