@@ -54,7 +54,7 @@ export async function fetchOrUpdateServerBinaries(
 
         if (result.status >= 400) {
           throw new Error(
-            "Received HTTP download status code:" + result.status
+            `Received HTTP download status code ${result.status} for url ${result.url}`
           );
         }
         // Check which assets are supported by current system
