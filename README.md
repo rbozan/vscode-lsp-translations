@@ -61,7 +61,7 @@ Glob patterns for the translation files which contain all the translations of yo
 ```
 
 ___
-###  `lsp-translations.translationFiles.exclude` (required)
+###  `lsp-translations.translationFiles.exclude`
 Glob patterns for the files which match the patterns in `lsp-translations.translationFiles.include` but should not be included as translation file.
 
 #### Default
