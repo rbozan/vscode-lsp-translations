@@ -41,15 +41,7 @@ export async function fetchOrUpdateServerBinaries(
         console.log(`Fetching assets of ${wantedVersion}`);
 
         const result = await fetch(
-          `https://api.github.com/repos/rbozan/lsp-translations/releases/${uri}`,
-          {
-            // TODO: Remove this secret when the repository has been made public
-            headers: process.env.GITHUB_TOKEN
-              ? {
-                  authorization: `token ${process.env.GITHUB_TOKEN}`,
-                }
-              : undefined,
-          }
+          `https://api.github.com/repos/rbozan/lsp-translations/releases/${uri}`
         );
 
         if (result.status >= 400) {
@@ -122,17 +114,11 @@ async function downloadServerBinary(
 
   const response = await fetch(downloadUrl, {
     headers: {
-      authorization: process.env.GITHUB_TOKEN
-        ? `token ${process.env.GITHUB_TOKEN}`
-        : "",
       accept: "application/octet-stream",
       // eslint-disable-next-line @typescript-eslint/naming-convention
       "User-Agent": "vscode-lsp-translations",
     },
   });
-  /* {
-    }
-  ); */
 
   if (!response.ok) {
     throw new Error(`unexpected response ${response.statusText}`);
