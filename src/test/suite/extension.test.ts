@@ -90,7 +90,7 @@ suite("Extension Test Suite", () => {
       true,
       "binary is incorrect version"
     );
-  }).timeout(25000);
+  }).timeout(30000);
 
   test("Server binary can be updated", async () => {
     downloader.updateServerBinaryVersion(context, "0.0.1a");

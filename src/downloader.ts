@@ -1,6 +1,11 @@
 import * as vscode from "vscode";
 
-import fetch from "node-fetch";
+import * as originalFetch from "cross-fetch";
+const fetch = require("fetch-retry")(originalFetch, {
+  retries: 3,
+  retryDelay: 1000,
+});
+
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -47,17 +52,24 @@ export async function fetchOrUpdateServerBinaries(
           }
         );
 
+        if (result.status >= 400) {
+          throw new Error(
+            "Received HTTP download status code:" + result.status
+          );
+        }
         // Check which assets are supported by current system
         const json = await result.json();
         const supportedTargets =
           platformArchTriples[process.platform][process.arch];
-        const asset = json.assets.find((asset: { name: string }) => {
+        const asset = json.assets?.find((asset: { name: string }) => {
           const targetName = path.parse(asset.name).name;
 
           return supportedTargets.some((triplet) => triplet.raw === targetName);
         });
 
         if (!asset) {
+          console.error("JSON assets:");
+          console.error(JSON.stringify(json, undefined, 2));
           throw new Error("No compatible asset found");
         }
         progress.report({
