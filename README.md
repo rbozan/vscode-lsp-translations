@@ -37,7 +37,7 @@ This extension requires https://github.com/rbozan/lsp-translations which will au
 
 ## Quick start
 1. Install the extension on *TODO: Add VSCode extension link*
-2. Add the configuration under [#Common configuration](Common configuration) to your workspace-settings
+2. Add the configuration under [Common configuration](#common-configuration) to your workspace-settings
 3. `translate(` away! (or `t(`, `translate`, `I18n.t(`),
 
 ## Extension Settings
@@ -114,7 +114,12 @@ Key | Value | Example
 -----------|-----------|--------
 File name | `(language).json` | `en.json`
 Key format | `(key)` | `header`
-Configuration| <pre lang="json">test</pre>
+
+#### Configuration
+```json
+"lsp-translations.translationFiles.include": ["./translations/*.json"],
+"lsp-translations.fileName.details": "(?P<language>.+?)\\."
+```
 
 ### Supplying the language in the translation key
 
@@ -122,7 +127,13 @@ Key | Value | Example
 -----------|-----------|--------
 File name | `(anything).json` | `language.json`
 Key format | `(language).(key)` | `en.header`
-Configuration| <pre lang="json">test</pre>
+
+#### Configuration
+```json
+"lsp-translations.translationFiles.include": ["./translations/*.json"],
+"lsp-translations.key.details": "^(?P<language>.+?)\\.",
+"lsp-translations.key.filter": "^.+?\\.(.+$)"
+```
 
 ### Supplying a project id and the language in the translation key
 
@@ -130,7 +141,13 @@ Key | Value | Example
 -----------|-----------|--------
 File name | `(anything).json` | `language.json`
 Key format | `(project_id).(language).(key)` | `12345.en.header`
-Configuration| <pre lang="json">test</pre>
+
+#### Configuration
+```json
+"lsp-translations.translationFiles.include": ["./translations/*.json"],
+"lsp-translations.key.details": "^.+?\\.(?P<language>.+?)\\.",
+"lsp-translations.key.filter": "^.+?\\..+?\\.(.+$)"
+```
 
 ## FAQ
 ### I'm not seeing any autocompletion for my translations
