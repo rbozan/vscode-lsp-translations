@@ -13,7 +13,7 @@ translate('h
 
 # vscode-lsp-translations
 
-An extension for VSCode which provides autocompletion for the translations within your project. Uses https://github.com/rbozan/lsp-translations under the hood.
+An extension for VSCode which provides autocompletion for the translations within your project. Uses https://github.com/rbozan/lsp-translations under the hood. Download the extension on https://marketplace.visualstudio.com/items?itemName=rbozan.vscode-lsp-translations. 
 
 ## Features
 
@@ -42,7 +42,7 @@ This extension requires https://github.com/rbozan/lsp-translations which will au
 
 ## Quick start
 
-1. Install the extension on _TODO: Add VSCode extension link_
+1. Install the extension on https://marketplace.visualstudio.com/items?itemName=rbozan.vscode-lsp-translations
 2. Add the configuration under [Common configurations](#common-configurations) to your workspace-settings
 3. `translate(` away! (or `t(`, `translate`, `I18n.t(`),
 
