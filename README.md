@@ -1,5 +1,3 @@
-**<center>**
-
 ```
 translate('h
             ^------------------------------------------------------
@@ -8,8 +6,6 @@ translate('h
             | - header.sub                in Visual Studio Code 👩‍💻 |
              ------------------------------------------------------
 ```
-
-**</center>**
 
 # vscode-lsp-translations
 
@@ -110,7 +106,7 @@ None.
 #### Example(s)
 
 ```json
-"^.+?\\.(?<language>.+?)\\."
+"^.+?\\.(?P<language>.+?)\\."
 ```
 
 ---
@@ -125,7 +121,7 @@ None.
 
 #### Example(s)
 
-If you have a translation key like `123.abc.key` and you only provide `key` to the `translation`function in your code, you can use this setting to filter out the unneeded parts. The first regex group would then be the correct key to be used. In the case of `123.abc.key` you can use the following regex:
+If you have a translation key like `123.abc.key` and you only provide `key` to the `translation` function in your code, you can use this setting to filter out the unneeded parts. The first regex group would then be the correct key to be used. In the case of `123.abc.key` you can use the following regex:
 
 ```regex
 ^.+?\..+?\.(.+$)
