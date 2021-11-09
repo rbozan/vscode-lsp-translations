@@ -5,7 +5,7 @@
   "version": "0.2.13",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rbozan/vscode-lsp-translations.git"
+    "url": "https://github.com/rbozan/vscode-lsp-translations"
   },
   "author": "Robin Bozan",
   "license": "MIT",
