@@ -81,6 +81,7 @@ jobs:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com
           extensionFile: ${{ steps.publishToOpenVSX.outputs.vsixPath }}
+          packagePath: ''
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
