@@ -2,7 +2,7 @@
   "name": "vscode-lsp-translations",
   "displayName": "lsp-translations",
   "description": "Provides autocompletion for the translations in your project (using lsp-translations, written in Rust).",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "repository": {
     "type": "git",
     "url": "https://github.com/rbozan/vscode-lsp-translations.git"
